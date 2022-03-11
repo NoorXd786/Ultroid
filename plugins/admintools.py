@@ -417,7 +417,7 @@ async def get_all_pinned(event):
     ):
         if i.message:
             t = " ".join(i.message.split()[:4])
-            txt = "{}....".format(t)
+            txt = f"{t}...."
         else:
             txt = "Go to message."
         a += f"{c}. <a href=https://t.me/c/{chat_id}/{i.id}>{txt}</a>\n"

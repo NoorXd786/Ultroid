@@ -222,8 +222,7 @@ async def _(e):
         return await e.answer(
             [], switch_pm="Mod Apps Search. Enter app name!", switch_pm_param="start"
         )
-    page = 1
-    start = (page - 1) * 3 + 1
+    start = 0 * 3 + 1
     da = base64.b64decode(choice(apis)).decode("ascii")
     url = f"https://www.googleapis.com/customsearch/v1?key={da}&cx=25b3b50edb928435b&q={quer}&start={start}"
     data = await async_searcher(url, re_json=True)
@@ -291,7 +290,7 @@ async def xda_dev(event):
                 title=title, description=desc, url=hre, thumb=thumb, text=text
             )
         )
-    uppar = "No Results Found :(" if not out else "|| XDA Search Results ||"
+    uppar = "|| XDA Search Results ||" if out else "No Results Found :("
     await event.answer(out, switch_pm=uppar, switch_pm_param="start")
 
 
@@ -307,9 +306,7 @@ async def _(e):
         get_string("instu_1")
         res = []
         if APP_CACHE and RECENTS.get(e.sender_id):
-            for a in RECENTS[e.sender_id]:
-                if APP_CACHE.get(a):
-                    res.append(APP_CACHE[a][0])
+            res.extend(APP_CACHE[a][0] for a in RECENTS[e.sender_id] if APP_CACHE.get(a))
         return await e.answer(
             res, switch_pm=get_string("instu_2"), switch_pm_param="start"
         )
@@ -394,7 +391,7 @@ async def piston_run(event):
         )
         return await event.answer([result])
     if not PISTON_LANGS:
-        se = await async_searcher(PISTON_URI + "runtimes", re_json=True)
+        se = await async_searcher(f'{PISTON_URI}runtimes', re_json=True)
         PISTON_LANGS.update({lang.pop("language"): lang for lang in se})
     if lang in PISTON_LANGS.keys():
         version = PISTON_LANGS[lang]["version"]
@@ -409,14 +406,19 @@ async def piston_run(event):
         )
         return await event.answer([result])
     output = await async_searcher(
-        PISTON_URI + "execute",
+        f'{PISTON_URI}execute',
         post=True,
-        json={"language": lang, "version": version, "files": [{"content": code}]},
+        json={
+            "language": lang,
+            "version": version,
+            "files": [{"content": code}],
+        },
         re_json=True,
     )
+
     output = output["run"]["output"] or get_string("instu_4")
     if len(output) > 3000:
-        output = output[:3000] + "..."
+        output = f'{output[:3000]}...'
     result = await event.builder.article(
         title="Result",
         description=output,
@@ -594,7 +596,7 @@ async def twitter_search(event):
         )
     except KeyError:
         pass
-    headers = {"Authorization": "bearer " + choice(_bearer_collected)}
+    headers = {"Authorization": f"bearer {choice(_bearer_collected)}"}
     res = await async_searcher(
         f"https://api.twitter.com/1.1/users/search.json?q={match}",
         headers=headers,
@@ -622,7 +624,7 @@ async def twitter_search(event):
                 thumb=thumb,
             )
         )
-    swi_ = "No User Found :(" if not reso else f"🐦 Showing {len(reso)} Results!"
+    swi_ = f"🐦 Showing {len(reso)} Results!" if reso else "No User Found :("
     await event.answer(reso, switch_pm=swi_, switch_pm_param="start")
     if _ult_cache.get("twitter"):
         _ult_cache["twitter"].update({match: reso})
@@ -648,7 +650,7 @@ async def savn_s(event):
             switch_pm_param="start",
         )
     results = await saavn_search(query)
-    swi = "No Results Found!" if not results else "🎵 Saavn Search"
+    swi = "🎵 Saavn Search" if results else "No Results Found!"
     res = []
     for song in results:
         thumb = wb(song["image"], 0, "image/jpeg", [])

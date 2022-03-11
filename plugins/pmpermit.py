@@ -191,14 +191,7 @@ if udB.get_key("PMSETTING"):
             except MessageNotModifiedError:
                 pass
 
-    @ultroid_bot.on(
-        events.NewMessage(
-            incoming=True,
-            func=lambda e: e.is_private
-            and e.sender_id not in DEVLIST
-            and not (e.out or e.sender.bot or e.sender.is_self or e.sender.verified),
-        ),
-    )
+    @ultroid_bot.on(events.NewMessage(incoming=True, func=lambda e: e.is_private and e.sender_id not in DEVLIST and not e.out and not e.sender.bot and not e.sender.is_self and not e.sender.verified))
     async def permitpm(event):
         inline_pm = Redis("INLINE_PM") or False
         user = event.sender
@@ -615,9 +608,10 @@ async def list_approved(event):
             tabulate(users, headers=["UserName", "UserID"], showindex="always")
         )
     await event.reply(
-        "List of users approved by [{}](tg://user?id={})".format(OWNER_NAME, OWNER_ID),
+        f"List of users approved by [{OWNER_NAME}](tg://user?id={OWNER_ID})",
         file="approved_pms.txt",
     )
+
     await xx.delete()
     remove("approved_pms.txt")
 

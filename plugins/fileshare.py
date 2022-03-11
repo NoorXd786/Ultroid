@@ -29,7 +29,7 @@ async def filestoreplg(event):
         return
     # allow storing both messages and media.
     filehash = await get_file_link(msg)
-    link_to_file = "https://t.me/{}?start={}".format(asst.me.username, filehash)
+    link_to_file = f"https://t.me/{asst.me.username}?start={filehash}"
     await eor(
         event,
         get_string("fsh_2").format(link_to_file),

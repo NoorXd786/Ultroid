@@ -46,7 +46,7 @@ _base = "https://pinterestdownloader.com/download?url="
 def gib_link(link):
     if link.startswith("https"):
         return _base + link.replace(":", "%3A").replace("/", "%2F")
-    return _base + f"https%3A%2F%2Fpin.it%2F{link}"
+    return f"{_base}https%3A%2F%2Fpin.it%2F{link}"
 
 
 @ultroid_cmd(pattern="eod ?(.*)")
@@ -58,16 +58,16 @@ async def diela(e):
     if match:
         date = match.split("/")[0]
         month = match.split("/")[1]
-        li += "/days/2021-2022/" + month + "/" + date
+        li += f"/days/2021-2022/{month}/{date}"
         te = get_string("eod_2").format(match)
     else:
         da = datetime.today().strftime("%F").split("-")
-        li += "/days/2021-2022/" + da[1] + "/" + da[2]
+        li += f"/days/2021-2022/{da[1]}/{da[2]}"
     ct = requests.get(li).content
     bt = bs(ct, "html.parser", from_encoding="utf-8")
     ml = bt.find_all("a", "js-link-target", href=re.compile("daysoftheyear.com/days"))
     for eve in ml[:5]:
-        te += "• " + f'[{eve.text}]({eve["href"]})\n'
+        te += f"• [{eve.text}]({eve['href']})\n"
     await m.edit(te, link_preview=False)
 
 
@@ -145,7 +145,7 @@ async def _(e):
         return await e.eor(get_string("ascii_1"))
     m = await e.eor(get_string("ascii_2"))
     img = await (await e.get_reply_message()).download_media()
-    char = "■" if not e.pattern_match.group(1) else e.pattern_match.group(1)
+    char = e.pattern_match.group(1) or "■"
     converter = Img2HTMLConverter(char=char)
     html = converter.convert(img)
     shot = WebShot(quality=85)

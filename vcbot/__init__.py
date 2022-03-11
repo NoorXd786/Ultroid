@@ -199,9 +199,10 @@ class Player:
         if done:
             await vcClient.send_message(
                 self._current_chat,
-                "• Joined VC in <code>{}</code>".format(chat_id),
+                f"• Joined VC in <code>{chat_id}</code>",
                 parse_mode="html",
             )
+
             return True
         await vcClient.send_message(
             self._current_chat,
@@ -391,16 +392,17 @@ async def dl_playlist(chat, from_user, link):
 
 async def file_download(event, reply, fast_download=True):
     thumb = "https://telegra.ph/file/22bb2349da20c7524e4db.mp4"
-    title = reply.file.title or reply.file.name or str(time()) + ".mp4"
-    file = reply.file.name or str(time()) + ".mp4"
+    title = reply.file.title or reply.file.name or f'{str(time())}.mp4'
+    file = reply.file.name or f'{str(time())}.mp4'
     if fast_download:
         dl = await downloader(
-            "vcbot/downloads/" + file,
+            f"vcbot/downloads/{file}",
             reply.media.document,
             event,
             time(),
-            "Downloading " + title + "...",
+            f"Downloading {title}...",
         )
+
         dl = dl.name
     else:
         dl = await reply.download_media()

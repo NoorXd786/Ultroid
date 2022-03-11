@@ -63,7 +63,7 @@ async def play_music_(event):
     else:
         song, thumb, song_name, link, duration = await download(song)
     ultSongs = Player(chat, event)
-    song_name = song_name[:30] + "..."
+    song_name = f'{song_name[:30]}...'
     if not ultSongs.group_call.is_connected:
         if not (await ultSongs.vc_joiner()):
             return
@@ -131,7 +131,7 @@ async def play_music_(event):
         song, thumb, song_name, link, duration = await file_download(
             msg, song, fast_download=False
         )
-        song_name = song_name[:30] + "..."
+        song_name = f'{song_name[:30]}...'
         if not ultSongs.group_call.is_connected:
             if not (await ultSongs.vc_joiner()):
                 return

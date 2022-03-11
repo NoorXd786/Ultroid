@@ -44,9 +44,7 @@ from . import (
 @ultroid_cmd(pattern="sample ?(.*)")
 async def gen_sample(e):
     sec = e.pattern_match.group(1)
-    stime = 35
-    if sec and sec.isdigit():
-        stime = int(sec)
+    stime = int(sec) if sec and sec.isdigit() else 35
     vido = await e.get_reply_message()
     if vido and vido.media and "video" in mediainfo(vido.media):
         if hasattr(vido.media, "document"):
@@ -60,12 +58,13 @@ async def gen_sample(e):
         xxx = await e.eor(get_string("audiotools_5"))
         c_time = time.time()
         file = await downloader(
-            "resources/downloads/" + name,
+            f"resources/downloads/{name}",
             vfile,
             xxx,
             c_time,
-            "Downloading " + name + "...",
+            f"Downloading {name}...",
         )
+
         o_size = os.path.getsize(file.name)
         d_time = time.time()
         diff = time_formatter((d_time - c_time) * 1000)
@@ -79,13 +78,7 @@ async def gen_sample(e):
         await bash(cmd)
         os.remove(file.name)
         f_time = time.time()
-        mmmm = await uploader(
-            out,
-            out,
-            f_time,
-            xxx,
-            "Uploading " + out + "...",
-        )
+        mmmm = await uploader(out, out, f_time, xxx, f"Uploading {out}...")
         data = await metadata(out)
         width = data["width"]
         height = data["height"]
@@ -113,9 +106,7 @@ async def gen_sample(e):
 @ultroid_cmd(pattern="vshots ?(.*)")
 async def gen_shots(e):
     ss = e.pattern_match.group(1)
-    shot = 5
-    if ss and ss.isdigit():
-        shot = int(ss)
+    shot = int(ss) if ss and ss.isdigit() else 5
     vido = await e.get_reply_message()
     if vido and vido.media and "video" in mediainfo(vido.media):
         if hasattr(vido.media, "document"):
@@ -129,12 +120,13 @@ async def gen_shots(e):
         xxx = await e.eor(get_string("audiotools_5"))
         c_time = time.time()
         file = await downloader(
-            "resources/downloads/" + name,
+            f"resources/downloads/{name}",
             vfile,
             xxx,
             c_time,
-            "Downloading " + name + "...",
+            f"Downloading {name}...",
         )
+
         o_size = os.path.getsize(file.name)
         d_time = time.time()
         diff = time_formatter((d_time - c_time) * 1000)
@@ -176,12 +168,13 @@ async def gen_sample(e):
         xxx = await e.eor(get_string("audiotools_5"))
         c_time = time.time()
         file = await downloader(
-            "resources/downloads/" + name,
+            f"resources/downloads/{name}",
             vfile,
             xxx,
             c_time,
-            "Downloading " + name + "...",
+            f"Downloading {name}...",
         )
+
         o_size = os.path.getsize(file.name)
         d_time = time.time()
         diff = time_formatter((d_time - c_time) * 1000)
@@ -198,13 +191,7 @@ async def gen_sample(e):
         await bash(cmd)
         os.remove(file.name)
         f_time = time.time()
-        mmmm = await uploader(
-            out,
-            out,
-            f_time,
-            xxx,
-            "Uploading " + out + "...",
-        )
+        mmmm = await uploader(out, out, f_time, xxx, f"Uploading {out}...")
         data = await metadata(out)
         width = data["width"]
         height = data["height"]

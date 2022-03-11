@@ -47,8 +47,7 @@ async def watcher(event):
 )
 async def startmute(event):
     xx = await event.eor("`Muting...`")
-    input_ = event.pattern_match.group(1)
-    if input_:
+    if input_ := event.pattern_match.group(1):
         try:
             userid = await event.client.parse_id(input_)
         except Exception as x:
